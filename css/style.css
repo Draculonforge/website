@@ -1,0 +1,192 @@
+:root {
+  --ink: #3d2614;
+  --red-ink: #57190f;
+  --gold: #d8a64c;
+  --parchment: #d7bd82;
+  --wood-dark: #24170f;
+  --wood-mid: #51351f;
+  --button-top: #744221;
+  --button-bottom: #3a1f0d;
+  --button-text: #f3d891;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 40px 20px;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    radial-gradient(circle at center, rgba(80,48,20,.18), rgba(8,7,6,.94)),
+    repeating-linear-gradient(90deg, #24170f 0, #2e1e13 18px, #21150e 36px);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(255,85,25,.22), transparent 30%),
+    radial-gradient(circle at 12% 25%, rgba(255,160,60,.08), transparent 20%),
+    radial-gradient(circle at 88% 30%, rgba(255,160,60,.08), transparent 20%);
+  animation: forgeGlow 4s ease-in-out infinite alternate;
+}
+
+.parchment {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1000px);
+  margin: 0 auto;
+  padding: 60px 50px;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255,255,220,.82), transparent 25%),
+    radial-gradient(circle at 80% 75%, rgba(110,61,24,.18), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(80,45,20,.035) 0, rgba(80,45,20,.035) 2px, transparent 2px, transparent 5px),
+    var(--parchment);
+  border: 12px solid var(--wood-mid);
+  outline: 3px solid #a77a38;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0,0,0,.72), inset 0 0 55px rgba(65,35,12,.48);
+}
+
+.site-header {
+  padding-bottom: 30px;
+  text-align: center;
+  border-bottom: 3px double #6b431f;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #76431d;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: #4b160d;
+  font-size: clamp(40px, 7vw, 74px);
+  letter-spacing: 3px;
+  line-height: 1.1;
+  text-shadow: 1px 1px 0 var(--gold), 3px 3px 4px rgba(0,0,0,.35);
+}
+
+.subtitle {
+  margin: 14px 0 0;
+  color: #6e3d17;
+  font-size: clamp(19px, 3vw, 29px);
+  font-style: italic;
+}
+
+.welcome {
+  max-width: 760px;
+  margin: 40px auto 30px;
+  text-align: center;
+  font-size: 21px;
+  line-height: 1.7;
+}
+
+.welcome h2 {
+  margin-bottom: 12px;
+  color: var(--red-ink);
+  font-size: 32px;
+}
+
+.divider {
+  margin: 28px auto;
+  color: #6d3519;
+  font-size: 28px;
+  text-align: center;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 760px;
+  margin: 35px auto;
+}
+
+.menu a {
+  display: block;
+  padding: 16px 14px;
+  color: var(--button-text);
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  background: linear-gradient(var(--button-top), var(--button-bottom));
+  border: 3px solid #2d180c;
+  border-radius: 7px;
+  box-shadow: inset 0 0 8px rgba(255,215,130,.25), 0 4px 8px rgba(0,0,0,.35);
+  transition: transform .2s ease, filter .2s ease;
+}
+
+.menu a:hover,
+.menu a:focus-visible {
+  transform: translateY(-3px);
+  filter: brightness(1.18);
+}
+
+.menu .primary-link {
+  background: linear-gradient(#8a4b24, #4a210d);
+}
+
+.town-cryer {
+  max-width: 760px;
+  margin: 45px auto 20px;
+  padding: 28px;
+  text-align: center;
+  background: rgba(255,235,177,.35);
+  border: 3px double #6e3f1c;
+  box-shadow: inset 0 0 20px rgba(84,47,18,.2);
+}
+
+.town-cryer h2 {
+  margin-top: 0;
+  color: var(--red-ink);
+  font-size: 34px;
+}
+
+.town-cryer p {
+  font-size: 19px;
+  line-height: 1.6;
+}
+
+.site-footer {
+  margin-top: 45px;
+  padding-top: 25px;
+  color: #5a3216;
+  font-size: 16px;
+  line-height: 1.4;
+  text-align: center;
+  border-top: 3px double #6b431f;
+}
+
+.site-footer p { margin: 5px 0; }
+
+@keyframes forgeGlow {
+  from { opacity: .62; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.025); }
+}
+
+@media (max-width: 700px) {
+  body { padding: 15px 10px; }
+  .parchment { padding: 45px 22px; border-width: 8px; }
+  .menu { grid-template-columns: 1fr; }
+  .welcome { font-size: 18px; }
+  .town-cryer { padding: 22px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body::before { animation: none; }
+  .menu a { transition: none; }
+}
