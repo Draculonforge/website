@@ -1,0 +1,86 @@
+name: Discord weekly announcements
+
+on:
+  schedule:
+    - cron: '0 9 * * 0'
+      timezone: America/Chicago
+    - cron: '0 9 * * 1'
+      timezone: America/Chicago
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: Which announcement?
+        type: choice
+        options: [games, council]
+        default: games
+        required: true
+      send:
+        description: Send to Discord (leave unchecked for preview only)
+        type: boolean
+        default: false
+  pull_request:
+    paths:
+      - 'automation/**'
+      - '.github/workflows/discord-weekly.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: discord-announcements-${{ github.event_name }}-${{ github.event.schedule || inputs.kind || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test dates, rotation, and message safety
+        run: python -m unittest discover -s automation -v
+
+  announce:
+    needs: test
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'schedule' && vars.DISCORD_POSTING_ENABLED == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate or send announcement
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          POST_KIND: ${{ inputs.kind }}
+          SEND_REQUESTED: ${{ inputs.send }}
+          GAMES_WEBHOOK: ${{ secrets.DISCORD_GAMES_WEBHOOK }}
+          COUNCIL_WEBHOOK: ${{ secrets.DISCORD_COUNCIL_WEBHOOK }}
+        shell: bash
+        run: |
+          kind="$POST_KIND"
+          send="$SEND_REQUESTED"
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            send=true
+            case "$SCHEDULE" in
+              '0 9 * * 0') kind=games ;;
+              '0 9 * * 1') kind=council ;;
+              *) echo 'Unknown schedule'; exit 1 ;;
+            esac
+          fi
+          case "$kind" in
+            games) export DISCORD_WEBHOOK="$GAMES_WEBHOOK" ;;
+            council) export DISCORD_WEBHOOK="$COUNCIL_WEBHOOK" ;;
+            *) echo 'Unknown announcement type'; exit 1 ;;
+          esac
+          if [ "$send" = "true" ]; then
+            python automation/discord_posts.py --kind "$kind" --send
+          else
+            python automation/discord_posts.py --kind "$kind"
+          fi
