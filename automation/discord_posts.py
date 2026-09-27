@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 CENTRAL = ZoneInfo('America/Chicago')
 ANCHOR = date(2026, 10, 3)
 GAMES = [
-    (0, '18:00', "Spanky's Memorial Mini Campaign", ''),
+    (0, '18:00', "Spanky's Memorial Mini Campaign", 'YummyTaco'),
     (1, '18:30', 'Lost Mines of Phandelver', 'Larry'),
     (2, '20:00', "Yummytaco's Weekly One-Shot — 1e / 2e / AD&D", 'YummyTaco'),
     (3, '18:30', 'Ghosts of Saltmarsh', 'Larry'),
@@ -47,6 +47,8 @@ def game_payload(day):
         stamp = start_time(sunday + timedelta(days=offset), clock)
         end = f" – <t:{start_time(saturday, '17:00')}:t>" if title == "Phantom's Embrace" else ''
         lines.extend([f'**{title}**', f'<t:{stamp}:F>{end}', f'DM: {dm or "To be confirmed"}'])
+        if title == "Spanky's Memorial Mini Campaign":
+            lines.append('Assistant DM: Larry')
         if title == "Phantom's Embrace":
             lines.append('Players: 5 / 8 • 3 open slots')
         lines.append('')
