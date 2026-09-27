@@ -18,7 +18,8 @@ GAMES = [
     (2, '20:00', "Yummytaco's Weekly One-Shot — 1e / 2e / AD&D", 'YummyTaco'),
     (3, '18:30', 'Ghosts of Saltmarsh', 'Larry'),
     (4, '18:00', 'Forgotten Realms', 'Moony'),
-    (5, '19:00', 'Curse of Strahd', 'Navy'),
+    (5, '18:00', 'Curse of Strahd', 'Navy'),
+    (6, '13:00', "Phantom's Embrace", 'evilfirefox911'),
 ]
 
 def sunday_for(day):
@@ -44,15 +45,19 @@ def game_payload(day):
     lines = ['All game dates and times display in your local timezone.', '']
     for offset, clock, title, dm in GAMES:
         stamp = start_time(sunday + timedelta(days=offset), clock)
-        lines.extend([f'**{title}**', f'<t:{stamp}:F>' + (f' • DM: {dm}' if dm else ''), ''])
+        end = f" – <t:{start_time(saturday, '17:00')}:t>" if title == "Phantom's Embrace" else ''
+        lines.extend([f'**{title}**', f'<t:{stamp}:F>{end}', f'DM: {dm or "To be confirmed"}'])
+        if title == "Phantom's Embrace":
+            lines.append('Players: 5 / 8 • 3 open slots')
+        lines.append('')
     if moony_plays(saturday):
         stamp = start_time(saturday, '18:00')
-        lines.extend(['**Continent of Vilyra — this Saturday**', f'<t:{stamp}:F> • DM: Moony', ''])
+        lines.extend(['**Continent of Vilyra — this Saturday**', f'<t:{stamp}:F>', 'DM: Moony', ''])
     else:
         next_game = ANCHOR if saturday < ANCHOR else saturday + timedelta(days=7)
         stamp = start_time(next_game, '18:00')
         lines.extend(['**Continent of Vilyra — no session this Saturday**',
-                      f'Next session: <t:{stamp}:F> • DM: Moony', ''])
+                      f'Next session: <t:{stamp}:F>', 'DM: Moony', ''])
     lines.extend(['**PLAY-BY-POST**', "Terry's Play-by-Post • DM: Terry",
                   'Vampire of the Masquerade • Yummytaco'])
     return base_payload(f'Weekly Games • {sunday:%b %d} – {saturday:%b %d, %Y}', '\n'.join(lines))
