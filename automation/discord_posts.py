@@ -80,6 +80,7 @@ def council_payload():
 🎲 **DUNGEON MASTERS**
 **Moony** • darkwolf1580
 **Navy** • Navyhm2002
+**EvilFoxFire** • evilfirefox911
 
 **Need help?**
 Contact an admin for server questions, a moderator for community concerns, or your DM for questions about your game.''')
