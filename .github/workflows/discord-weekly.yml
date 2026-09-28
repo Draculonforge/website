@@ -2,9 +2,9 @@ name: Discord weekly announcements
 
 on:
   schedule:
-    - cron: '0 9 * * 0'
+    - cron: '0 3 * * 0'
       timezone: America/Chicago
-    - cron: '0 9 * * 1'
+    - cron: '0 3 * * 1'
       timezone: America/Chicago
   workflow_dispatch:
     inputs:
@@ -69,8 +69,8 @@ jobs:
           if [ "$EVENT_NAME" = "schedule" ]; then
             send=true
             case "$SCHEDULE" in
-              '0 9 * * 0') kind=games ;;
-              '0 9 * * 1') kind=council ;;
+              '0 3 * * 0') kind=games ;;
+              '0 3 * * 1') kind=council ;;
               *) echo 'Unknown schedule'; exit 1 ;;
             esac
           fi
